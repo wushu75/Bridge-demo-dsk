@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bridge — Live Demo | Dr Sophia Khalique & Associates</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #B8965A;
+    --gold-light: #D4AF78;
+    --gold-pale: #F5EDD9;
+    --navy: #0D1F2D;
+    --navy-mid: #162840;
+    --navy-light: #1E3A52;
+    --cream: #FAF7F2;
+    --cream-dark: #F0EBE0;
+    --text: #1A1A1A;
+    --text-soft: #5A5A5A;
+    --text-muted: #9A9A9A;
+    --white: #FFFFFF;
+    --red: #C0392B;
+    --amber: #D4730A;
+    --green: #1A6B45;
+    --green-bg: #EAF4EE;
+    --amber-bg: #FDF3E3;
+    --red-bg: #FDECEA;
+    --radius: 4px;
+    --shadow: 0 2px 20px rgba(13,31,45,0.08);
+    --shadow-lg: 0 8px 40px rgba(13,31,45,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── LAYOUT ── */
+  .app { display: flex; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar-header {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(184,150,90,0.2);
+  }
+
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .brand-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .practice-tag {
+    margin-top: 14px;
+    padding: 10px 12px;
+    background: rgba(184,150,90,0.12);
+    border: 1px solid rgba(184,150,90,0.25);
+    border-radius: var(--radius);
+  }
+
+  .practice-tag-label { font-size: 10px; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+  .practice-tag-name { font-size: 12px; color: var(--white); font-weight: 500; }
+  .practice-tag-addr { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+
+  .sidebar-nav { padding: 16px 0; flex: 1; }
+
+  .nav-section-label {
+    padding: 8px 24px 4px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 400;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.9); }
+  .nav-item.active { background: rgba(184,150,90,0.1); border-left-color: var(--gold); color: var(--white); }
+  .nav-item .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .nav-badge.amber { background: var(--amber); }
+  .nav-badge.green { background: var(--green); }
+
+  .sidebar-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .demo-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(184,150,90,0.15);
+    border: 1px solid rgba(184,150,90,0.3);
+    border-radius: var(--radius);
+    font-size: 11px;
+    color: var(--gold-light);
+  }
+
+  .demo-dot {
+    width: 7px; height: 7px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 0 var(--cream-dark);
+  }
+
+  .topbar-left { display: flex; flex-direction: column; }
+  .topbar-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--navy); }
+  .topbar-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .stat-pill.red { background: var(--red-bg); color: var(--red); }
+  .stat-pill.amber { background: var(--amber-bg); color: var(--amber); }
+  .stat-pill.green { background: var(--green-bg); color: var(--green); }
+  .stat-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* ── CONTENT ── */
+  .content { padding: 32px; flex: 1; }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── SCREEN: SUBMIT ── */
+  .submit-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 32px;
+    max-width: 1100px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .card-body { padding: 24px 28px; }
+
+  /* ── FORM ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+
+  input, select, textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    background: var(--cream);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: var(--radius);
+    padding: 10px 13px;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    background: var(--white);
+  }
+
+  textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+  select { cursor: pointer; }
+
+  .outcome-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+  }
+
+  .outcome-btn {
+    padding: 7px 14px;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    background: var(--cream);
+    color: var(--text-soft);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .outcome-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .outcome-btn.selected { background: var(--gold); border-color: var(--gold); color: var(--white); }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(13,31,45,0.25); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── SIDEBAR INFO ── */
+  .info-block {
+    padding: 18px 20px;
+    border-left: 3px solid var(--gold);
+    background: var(--gold-pale);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 16px;
+  }
+
+  .info-block-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .info-block p { font-size: 13px; color: var(--text-soft); line-height: 1.6; }
+
+  .flow-steps { display: flex; flex-direction: column; gap: 0; }
+
+  .flow-step {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cream-dark);
+    position: relative;
+  }
+
+  .flow-step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text { font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+  .step-time { font-size: 11px; color: var(--gold); font-weight: 500; margin-top: 2px; }
+
+  /* ── PROCESSING ── */
+  .processing-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,31,45,0.85);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .processing-screen.show { display: flex; }
+
+  .processing-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 40px 48px;
+    text-align: center;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  .processing-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    animation: spin 1.5s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .processing-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .processing-sub { font-size: 14px; color: var(--text-muted); }
+
+  .processing-steps {
+    margin-top: 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .p-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.4s;
+  }
+
+  .p-step.done { opacity: 1; transform: translateY(0); color: var(--text); }
+  .p-step-icon { font-size: 16px; }
+
+  /* ── TRIAGE RESULT ── */
+  .triage-banner {
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    animation: fadeSlide 0.5s ease;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .triage-banner.high { background: var(--red-bg); border: 1.5px solid #E8B4B0; }
+  .triage-banner.medium { background: var(--amber-bg); border: 1.5px solid #EDD4A8; }
+  .triage-banner.low { background: var(--green-bg); border: 1.5px solid #A8D4B8; }
+
+  .triage-level-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .high .triage-level-badge { background: var(--red); color: white; }
+  .medium .triage-level-badge { background: var(--amber); color: white; }
+  .low .triage-level-badge { background: var(--green); color: white; }
+
+  .triage-info { flex: 1; }
+  .triage-heading { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .triage-reason { font-size: 13px; color: var(--text-soft); line-height: 1.6; }
+
+  /* ── ACK EMAIL ── */
+  .email-preview {
+    background: var(--white);
+    border-radius: 8px;
+    border: 1.5px solid var(--cream-dark);
+    overflow: hidden;
+    margin-bottom: 24px;
+    animation: fadeSlide 0.5s ease 0.2s both;
+  }
+
+  .email-header {
+    background: var(--cream);
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 14px;
+    font-size: 12.5px;
+  }
+
+  .email-label { color: var(--text-muted); font-weight: 500; }
+  .email-value { color: var(--text); }
+  .email-subject-val { font-weight: 600; color: var(--navy); }
+
+  .email-body {
+    padding: 20px;
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+
+  .email-timestamp {
+    padding: 10px 20px;
+    background: var(--green-bg);
+    border-top: 1px solid #C8E8D0;
+    font-size: 11.5px;
+    color: var(--green);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── DRAFT RESPONSE ── */
+  .draft-card {
+    background: var(--white);
+    border-radius: 8px;
+    border: 1.5px solid var(--cream-dark);
+    overflow: hidden;
+    animation: fadeSlide 0.5s ease 0.4s both;
+  }
+
+  .draft-header {
+    padding: 14px 20px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .draft-title { color: var(--white); font-size: 13px; font-weight: 500; }
+  .draft-ai-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(184,150,90,0.3);
+    color: var(--gold-light);
+    border-radius: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .draft-body {
+    padding: 20px;
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: var(--text);
+    white-space: pre-wrap;
+    min-height: 200px;
+  }
+
+  .draft-actions {
+    padding: 14px 20px;
+    border-top: 1px solid var(--cream-dark);
+    display: flex;
+    gap: 10px;
+    background: var(--cream);
+  }
+
+  .btn {
+    padding: 9px 18px;
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+  .btn-secondary { background: var(--white); color: var(--text); border: 1.5px solid var(--cream-dark); }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-danger { background: var(--red-bg); color: var(--red); border: 1.5px solid #E8B4B0; }
+
+  /* ── DASHBOARD VIEW ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.amber::before { background: var(--amber); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.navy::before { background: var(--navy); }
+
+  .stat-card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; }
+  .stat-card-num { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: var(--navy); line-height: 1; }
+  .stat-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+  /* ── CASE TABLE ── */
+  .table-wrapper { overflow-x: auto; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    background: var(--cream);
+    border-bottom: 1px solid var(--cream-dark);
+    font-weight: 500;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--cream-dark);
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+
+  tbody tr:hover { background: var(--cream); }
+
+  tbody td {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .risk-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .risk-tag.high { background: var(--red-bg); color: var(--red); }
+  .risk-tag.medium { background: var(--amber-bg); color: var(--amber); }
+  .risk-tag.low { background: var(--green-bg); color: var(--green); }
+  .risk-tag::before { content: '●'; font-size: 8px; }
+
+  .status-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .status-tag.received { background: #EEF2FF; color: #4F46E5; }
+  .status-tag.acknowledged { background: #E0F2FE; color: #0369A1; }
+  .status-tag.draft-ready { background: var(--amber-bg); color: var(--amber); }
+  .status-tag.resolved { background: var(--green-bg); color: var(--green); }
+
+  .td-patient { font-weight: 500; }
+  .td-ref { font-family: monospace; font-size: 12px; color: var(--text-muted); }
+
+  /* ── CASE MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,31,45,0.7);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: fadeSlide 0.25s ease;
+  }
+
+  .modal-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 10;
+  }
+
+  .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--navy); }
+
+  .modal-close {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cream);
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-soft);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: var(--cream-dark); }
+
+  .modal-body { padding: 24px 28px; }
+
+  .modal-section { margin-bottom: 20px; }
+  .modal-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+  .modal-section-content { font-size: 13.5px; line-height: 1.7; color: var(--text); }
+
+  .complaint-quote {
+    padding: 16px 20px;
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-style: italic;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .meta-value { font-size: 13.5px; font-weight: 500; color: var(--text); }
+
+  /* ── ACK BANNER ── */
+  .ack-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--green-bg);
+    border: 1px solid #C0DFC8;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--green);
+  }
+
+  .ack-banner strong { font-weight: 600; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1.5px solid var(--cream-dark);
+    margin-bottom: 20px;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+
+  .tab:hover { color: var(--navy); }
+  .tab.active { border-bottom-color: var(--gold); color: var(--navy); font-weight: 500; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── SMS ALERT ── */
+  .sms-preview {
+    max-width: 300px;
+    background: #1C1C1E;
+    border-radius: 16px;
+    padding: 20px 16px;
+    margin: 0 auto;
+  }
+
+  .sms-time { text-align: center; font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 14px; }
+
+  .sms-bubble {
+    background: #2C2C2E;
+    border-radius: 12px 12px 12px 2px;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: white;
+  }
+
+  .sms-sender { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-state-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--navy); margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ── TYPING CURSOR ── */
+  .typing::after {
+    content: '▋';
+    animation: blink 0.8s infinite;
+    color: var(--gold);
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .submit-layout { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon">🛡</div>
+        <span class="brand-name">The Bridge</span>
+      </div>
+      <div class="brand-sub">Patient Resolution System</div>
+      <div class="practice-tag">
+        <div class="practice-tag-label">Configured for</div>
+        <div class="practice-tag-name">Dr Sophia Khalique & Associates</div>
+        <div class="practice-tag-addr">101 Harley Street, London W1G 6AH</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+      <div class="nav-item active" onclick="showView('submit')">
+        <span class="nav-icon">📋</span> Submit Complaint
+      </div>
+      <div class="nav-item" onclick="showView('dashboard')">
+        <span class="nav-icon">📊</span> Case Dashboard
+        <span class="nav-badge amber" id="open-count">3</span>
+      </div>
+      <div class="nav-item" onclick="showView('cases')">
+        <span class="nav-icon">📁</span> All Cases
+      </div>
+
+      <div class="nav-section-label" style="margin-top:12px">Alerts</div>
+      <div class="nav-item" onclick="showView('alerts')">
+        <span class="nav-icon">🚨</span> High Risk Alerts
+        <span class="nav-badge" id="alert-count">1</span>
+      </div>
+      <div class="nav-item" onclick="showView('audit')">
+        <span class="nav-icon">📜</span> CQC Audit Trail
+        <span class="nav-badge green">✓</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="demo-badge">
+        <div class="demo-dot"></div>
+        Live Interactive Demo
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title" id="topbar-title">Patient Complaint Portal</div>
+        <div class="topbar-sub" id="topbar-sub">Submit and manage patient concerns</div>
+      </div>
+      <div class="topbar-right">
+        <div class="stat-pill red"><div class="stat-pill-dot"></div> 1 High Risk</div>
+        <div class="stat-pill amber"><div class="stat-pill-dot"></div> 2 Pending Review</div>
+        <div class="stat-pill green"><div class="stat-pill-dot"></div> System Live</div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- VIEW: SUBMIT -->
+      <div class="view active" id="view-submit">
+        <div class="submit-layout">
+
+          <!-- Form -->
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">New Patient Concern</div>
+                <span style="font-size:12px;color:var(--text-muted)">Ref auto-generated on submission</span>
+              </div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label>Patient Full Name</label>
+                    <input type="text" id="f-name" placeholder="e.g. Alexandra Petrov" value="Alexandra Petrov">
+                  </div>
+                  <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="f-dob" value="1978-04-14">
+                  </div>
+                  <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="f-email" placeholder="patient@email.com" value="a.petrov@email.com">
+                  </div>
+                  <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="f-phone" placeholder="+44 7700 000000" value="+44 7745 123456">
+                  </div>
+                  <div class="form-group">
+                    <label>Treating Clinician</label>
+                    <select id="f-clinician">
+                      <option>Dr Sophia Khalique</option>
+                      <option>Dr Mohammad Tamimi</option>
+                      <option>Dr Bob Sangar</option>
+                      <option>Nurse Practitioner</option>
+                      <option>Complementary Health Team</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Date of Consultation</label>
+                    <input type="date" id="f-date" value="2026-02-18">
+                  </div>
+                  <div class="form-group">
+                    <label>Type of Service</label>
+                    <select id="f-service">
+                      <option>Private GP Consultation</option>
+                      <option>Health Screening / Assessment</option>
+                      <option>Membership Services</option>
+                      <option>Anti-Ageing / Aesthetic Treatment</option>
+                      <option>Occupational Health</option>
+                      <option>Travel Vaccination</option>
+                      <option>Corporate Health</option>
+                      <option>Complementary Health</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Preferred Language</label>
+                    <select id="f-lang">
+                      <option>English</option>
+                      <option>Arabic</option>
+                      <option>Mandarin</option>
+                      <option>Spanish</option>
+                    </select>
+                  </div>
+                  <div class="form-group full">
+                    <label>Nature of Concern</label>
+                    <textarea id="f-concern" placeholder="Please describe the concern in detail...">I am a registered patient on the monthly membership plan at £1,000 per month. During my consultation with Dr Khalique on 18th February I raised concerns about fatigue and weight gain. I was told these were lifestyle issues and sent away with general advice. I have since had blood tests done privately elsewhere which have revealed my thyroid levels are significantly abnormal. I feel this was missed during my consultation and I am concerned about the impact on my health over the past several months. I would like an explanation and a review of my care.</textarea>
+                  </div>
+                  <div class="form-group full">
+                    <label>Desired Outcome</label>
+                    <div class="outcome-group" id="outcome-group">
+                      <button class="outcome-btn selected" onclick="toggleOutcome(this)">Explanation & Apology</button>
+                      <button class="outcome-btn" onclick="toggleOutcome(this)">Clinical Review</button>
+                      <button class="outcome-btn" onclick="toggleOutcome(this)">Refund / Compensation</button>
+                      <button class="outcome-btn" onclick="toggleOutcome(this)">Transfer of Care</button>
+                      <button class="outcome-btn" onclick="toggleOutcome(this)">Other</button>
+                    </div>
+                  </div>
+                </div>
+                <button class="submit-btn" onclick="submitComplaint()" id="submit-btn">
+                  🛡 Submit to The Bridge
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info sidebar -->
+          <div>
+            <div class="info-block">
+              <div class="info-block-title">What happens next</div>
+              <p>The moment you submit, The Bridge takes over automatically. Here's what happens in the background.</p>
+            </div>
+            <div class="card">
+              <div class="card-body" style="padding:20px">
+                <div class="flow-steps">
+                  <div class="flow-step">
+                    <div class="step-num">1</div>
+                    <div>
+                      <div class="step-text">Patient receives automated acknowledgement email from the practice</div>
+                      <div class="step-time">⚡ Within 60 seconds</div>
+                    </div>
+                  </div>
+                  <div class="flow-step">
+                    <div class="step-num">2</div>
+                    <div>
+                      <div class="step-text">AI triages complaint and assigns risk level with full reasoning</div>
+                      <div class="step-time">⚡ Simultaneous</div>
+                    </div>
+                  </div>
+                  <div class="flow-step">
+                    <div class="step-num">3</div>
+                    <div>
+                      <div class="step-text">High risk cases trigger immediate SMS alert to practice manager</div>
+                      <div class="step-time">⚡ Instant</div>
+                    </div>
+                  </div>
+                  <div class="flow-step">
+                    <div class="step-num">4</div>
+                    <div>
+                      <div class="step-text">Full draft response prepared for practice manager to review & approve</div>
+                      <div class="step-time">Within 2 minutes</div>
+                    </div>
+                  </div>
+                  <div class="flow-step">
+                    <div class="step-num">5</div>
+                    <div>
+                      <div class="step-text">Case logged in dashboard with complete audit trail for CQC</div>
+                      <div class="step-time">Automatically</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px; padding:16px 18px; background:var(--navy); border-radius:8px; color:white;">
+              <div style="font-size:11px;color:var(--gold-light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Practice Protection</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;">Every response requires <strong style="color:white">human approval</strong> before it reaches the patient. The Bridge drafts — your team decides.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result area -->
+        <div id="result-area" style="display:none; margin-top:28px; max-width:900px; animation: fadeSlide 0.5s ease;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--navy);">The Bridge has processed this complaint</div>
+            <div style="padding:4px 12px;background:var(--green-bg);color:var(--green);border-radius:12px;font-size:12px;font-weight:600;">LIVE</div>
+          </div>
+
+          <div id="triage-result"></div>
+          <div id="ack-email"></div>
+          <div id="draft-response"></div>
+        </div>
+      </div>
+
+      <!-- VIEW: DASHBOARD -->
+      <div class="view" id="view-dashboard">
+        <div class="stats-row">
+          <div class="stat-card navy">
+            <div class="stat-card-label">Total This Month</div>
+            <div class="stat-card-num">7</div>
+            <div class="stat-card-sub">Complaints received</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-card-label">High Risk</div>
+            <div class="stat-card-num">1</div>
+            <div class="stat-card-sub">Requires immediate attention</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-card-label">Pending Review</div>
+            <div class="stat-card-num">2</div>
+            <div class="stat-card-sub">Draft ready, awaiting approval</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-card-label">Resolved</div>
+            <div class="stat-card-num">4</div>
+            <div class="stat-card-sub">Average 1.8 days to close</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Open Cases</div>
+            <div style="font-size:12px;color:var(--text-muted)">3 cases requiring action</div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Patient</th>
+                  <th>Clinician</th>
+                  <th>Concern</th>
+                  <th>Risk</th>
+                  <th>Status</th>
+                  <th>Received</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="openCase('case1')">
+                  <td class="td-ref">DSK-0047</td>
+                  <td class="td-patient">Alexandra Petrov</td>
+                  <td>Dr S. Khalique</td>
+                  <td>Possible missed thyroid diagnosis</td>
+                  <td><span class="risk-tag high">High</span></td>
+                  <td><span class="status-tag draft-ready">Draft Ready</span></td>
+                  <td>Today, 09:14</td>
+                </tr>
+                <tr onclick="openCase('case2')">
+                  <td class="td-ref">DSK-0046</td>
+                  <td class="td-patient">James Whitmore</td>
+                  <td>Dr M. Tamimi</td>
+                  <td>Billing dispute — membership charge</td>
+                  <td><span class="risk-tag medium">Medium</span></td>
+                  <td><span class="status-tag acknowledged">Acknowledged</span></td>
+                  <td>Yesterday, 16:42</td>
+                </tr>
+                <tr onclick="openCase('case3')">
+                  <td class="td-ref">DSK-0045</td>
+                  <td class="td-patient">Nadia Al-Rashid</td>
+                  <td>Dr S. Khalique</td>
+                  <td>Appointment cancellation — no notice</td>
+                  <td><span class="risk-tag low">Low</span></td>
+                  <td><span class="status-tag draft-ready">Draft Ready</span></td>
+                  <td>2 days ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: ALL CASES -->
+      <div class="view" id="view-cases">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Cases — March 2026</div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Patient</th>
+                  <th>Clinician</th>
+                  <th>Concern</th>
+                  <th>Risk</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="openCase('case1')">
+                  <td class="td-ref">DSK-0047</td>
+                  <td class="td-patient">Alexandra Petrov</td>
+                  <td>Dr S. Khalique</td>
+                  <td>Possible missed thyroid diagnosis</td>
+                  <td><span class="risk-tag high">High</span></td>
+                  <td><span class="status-tag draft-ready">Draft Ready</span></td>
+                  <td>07 Mar 2026</td>
+                </tr>
+                <tr onclick="openCase('case2')">
+                  <td class="td-ref">DSK-0046</td>
+                  <td class="td-patient">James Whitmore</td>
+                  <td>Dr M. Tamimi</td>
+                  <td>Billing dispute — membership charge</td>
+                  <td><span class="risk-tag medium">Medium</span></td>
+                  <td><span class="status-tag acknowledged">Acknowledged</span></td>
+                  <td>06 Mar 2026</td>
+                </tr>
+                <tr onclick="openCase('case3')">
+                  <td class="td-ref">DSK-0045</td>
+                  <td class="td-patient">Nadia Al-Rashid</td>
+                  <td>Dr S. Khalique</td>
+                  <td>Appointment cancellation — no notice</td>
+                  <td><span class="risk-tag low">Low</span></td>
+                  <td><span class="status-tag draft-ready">Draft Ready</span></td>
+                  <td>05 Mar 2026</td>
+                </tr>
+                <tr>
+                  <td class="td-ref">DSK-0044</td>
+                  <td class="td-patient">Marcus Chen</td>
+                  <td>Dr B. Sangar</td>
+                  <td>Prescription delay</td>
+                  <td><span class="risk-tag low">Low</span></td>
+                  <td><span class="status-tag resolved">Resolved</span></td>
+                  <td>03 Mar 2026</td>
+                </tr>
+                <tr>
+                  <td class="td-ref">DSK-0043</td>
+                  <td class="td-patient">Sophie Laurent</td>
+                  <td>Dr S. Khalique</td>
+                  <td>Referral letter not received by specialist</td>
+                  <td><span class="risk-tag medium">Medium</span></td>
+                  <td><span class="status-tag resolved">Resolved</span></td>
+                  <td>01 Mar 2026</td>
+                </tr>
+                <tr>
+                  <td class="td-ref">DSK-0042</td>
+                  <td class="td-patient">Ibrahim Al-Farsi</td>
+                  <td>Dr M. Tamimi</td>
+                  <td>Waiting time — out of hours visit</td>
+                  <td><span class="risk-tag low">Low</span></td>
+                  <td><span class="status-tag resolved">Resolved</span></td>
+                  <td>27 Feb 2026</td>
+                </tr>
+                <tr>
+                  <td class="td-ref">DSK-0041</td>
+                  <td class="td-patient">Charlotte Webb</td>
+                  <td>Dr S. Khalique</td>
+                  <td>Health screening results delayed</td>
+                  <td><span class="risk-tag low">Low</span></td>
+                  <td><span class="status-tag resolved">Resolved</span></td>
+                  <td>24 Feb 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: ALERTS -->
+      <div class="view" id="view-alerts">
+        <div class="card" style="margin-bottom:24px;">
+          <div class="card-header">
+            <div class="card-title" style="color:var(--red)">🚨 High Risk Alert — Immediate Attention Required</div>
+            <span style="font-size:12px;color:var(--text-muted)">Sent to practice manager via SMS + email</span>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+              <div>
+                <div style="margin-bottom:16px;">
+                  <div class="modal-section-label">Alert Triggered</div>
+                  <div style="font-size:13.5px;font-weight:500;color:var(--red);">Today at 09:14 — DSK-0047</div>
+                </div>
+                <div style="margin-bottom:16px;">
+                  <div class="modal-section-label">Patient</div>
+                  <div style="font-size:13.5px;font-weight:500;">Alexandra Petrov — Membership Patient</div>
+                </div>
+                <div style="margin-bottom:16px;">
+                  <div class="modal-section-label">Risk Reason</div>
+                  <div style="font-size:13.5px;line-height:1.6;color:var(--text-soft);">Possible missed clinical diagnosis (thyroid). Patient has obtained conflicting test results from an external provider. Clinical negligence risk and potential Duty of Candour obligation under CQC Regulation 20.</div>
+                </div>
+                <div>
+                  <div class="modal-section-label">Recommended Action</div>
+                  <div style="font-size:13.5px;line-height:1.6;color:var(--text-soft);">Clinical review of patient records before response is sent. Dr Khalique to be informed personally. Draft response prepared — do not send without senior approval.</div>
+                </div>
+              </div>
+              <div>
+                <div class="modal-section-label" style="margin-bottom:12px;">SMS Alert Sent To Practice Manager</div>
+                <div class="sms-preview">
+                  <div class="sms-time">Today 09:14</div>
+                  <div class="sms-bubble">
+                    <div class="sms-sender">The Bridge — DSK Practice</div>
+                    ⚠️ HIGH RISK complaint received (DSK-0047)
+
+Patient: Alexandra Petrov
+Re: Possible missed diagnosis — thyroid
+
+Duty of Candour may apply. Clinical review required before response.
+
+Log in to The Bridge dashboard to review draft.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: AUDIT -->
+      <div class="view" id="view-audit">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">CQC Audit Trail</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:8px;height:8px;background:var(--green);border-radius:50%;"></div>
+              <span style="font-size:12px;color:var(--green);font-weight:500;">CQC Compliant</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom:20px;padding:14px 18px;background:var(--green-bg);border:1px solid #C0DFC8;border-radius:var(--radius);">
+              <div style="font-size:13px;color:var(--green);line-height:1.6;">All complaint events are logged automatically with full timestamps, user actions, AI triage decisions, and response history. This trail is available for CQC inspection at any time and meets the requirements of CQC Regulation 16 (Receiving and Acting on Complaints).</div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Reference</th>
+                  <th>Event</th>
+                  <th>Actor</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">07 Mar 2026 09:14:03</td>
+                  <td class="td-ref">DSK-0047</td>
+                  <td>Complaint Received</td>
+                  <td>System</td>
+                  <td style="font-size:12px;color:var(--text-soft);">Patient: Alexandra Petrov. Channel: Portal</td>
+                </tr>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">07 Mar 2026 09:14:05</td>
+                  <td class="td-ref">DSK-0047</td>
+                  <td>Acknowledgement Sent</td>
+                  <td>System (Auto)</td>
+                  <td style="font-size:12px;color:var(--text-soft);">Email to a.petrov@email.com. Ref confirmed.</td>
+                </tr>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">07 Mar 2026 09:14:08</td>
+                  <td class="td-ref">DSK-0047</td>
+                  <td>AI Triage Completed</td>
+                  <td>The Bridge AI</td>
+                  <td style="font-size:12px;color:var(--red);font-weight:500;">Risk: HIGH — Possible missed diagnosis. Duty of Candour flagged.</td>
+                </tr>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">07 Mar 2026 09:14:09</td>
+                  <td class="td-ref">DSK-0047</td>
+                  <td>SMS Alert Sent</td>
+                  <td>System (Auto)</td>
+                  <td style="font-size:12px;color:var(--text-soft);">Practice manager notified via SMS and email.</td>
+                </tr>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">07 Mar 2026 09:14:12</td>
+                  <td class="td-ref">DSK-0047</td>
+                  <td>Draft Response Generated</td>
+                  <td>The Bridge AI</td>
+                  <td style="font-size:12px;color:var(--text-soft);">Awaiting practice manager review and approval.</td>
+                </tr>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">06 Mar 2026 16:42:11</td>
+                  <td class="td-ref">DSK-0046</td>
+                  <td>Complaint Received</td>
+                  <td>System</td>
+                  <td style="font-size:12px;color:var(--text-soft);">Patient: James Whitmore. Channel: Portal</td>
+                </tr>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">06 Mar 2026 16:42:13</td>
+                  <td class="td-ref">DSK-0046</td>
+                  <td>Acknowledgement Sent</td>
+                  <td>System (Auto)</td>
+                  <td style="font-size:12px;color:var(--text-soft);">Email to j.whitmore@email.com</td>
+                </tr>
+                <tr>
+                  <td style="font-size:12px;color:var(--text-muted)">03 Mar 2026 11:20:44</td>
+                  <td class="td-ref">DSK-0044</td>
+                  <td>Case Resolved</td>
+                  <td>Practice Manager</td>
+                  <td style="font-size:12px;color:var(--green);font-weight:500;">Response approved and sent. Patient confirmed satisfied.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PROCESSING OVERLAY -->
+<div class="processing-screen" id="processing">
+  <div class="processing-card">
+    <div class="processing-icon">⚙️</div>
+    <div class="processing-title">The Bridge is working</div>
+    <div class="processing-sub">Processing complaint for Dr Sophia Khalique & Associates</div>
+    <div class="processing-steps">
+      <div class="p-step" id="ps1"><span class="p-step-icon">✉️</span> Sending patient acknowledgement email...</div>
+      <div class="p-step" id="ps2"><span class="p-step-icon">🧠</span> AI triage — analysing clinical context...</div>
+      <div class="p-step" id="ps3"><span class="p-step-icon">⚠️</span> Assessing regulatory implications...</div>
+      <div class="p-step" id="ps4"><span class="p-step-icon">📝</span> Drafting response letter...</div>
+      <div class="p-step" id="ps5"><span class="p-step-icon">📊</span> Logging case to dashboard...</div>
+    </div>
+  </div>
+</div>
+
+<!-- CASE MODAL -->
+<div class="modal-overlay" id="case-modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title">Case DSK-0047</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="modal-sub">Alexandra Petrov — High Risk</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('case-modal').classList.remove('show')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── NAV ──
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+
+  const titles = {
+    submit: ['Patient Complaint Portal', 'Submit and manage patient concerns'],
+    dashboard: ['Case Dashboard', 'Open cases requiring attention'],
+    cases: ['All Cases', 'Complete case history'],
+    alerts: ['High Risk Alerts', 'Cases requiring immediate action'],
+    audit: ['CQC Audit Trail', 'Full compliance log']
+  };
+
+  document.getElementById('topbar-title').textContent = titles[name][0];
+  document.getElementById('topbar-sub').textContent = titles[name][1];
+}
+
+function toggleOutcome(btn) {
+  document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ── SUBMIT ──
+function submitComplaint() {
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  const proc = document.getElementById('processing');
+  proc.classList.add('show');
+
+  const steps = ['ps1','ps2','ps3','ps4','ps5'];
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      document.getElementById(s).classList.add('done');
+    }, 600 + i * 700);
+  });
+
+  setTimeout(() => {
+    proc.classList.remove('show');
+    showResult();
+    btn.disabled = false;
+    btn.innerHTML = '🛡 Submit to The Bridge';
+    document.getElementById('open-count').textContent = '4';
+    document.getElementById('alert-count').textContent = '2';
+  }, 5000);
+}
+
+function showResult() {
+  const name = document.getElementById('f-name').value || 'The Patient';
+  const clinician = document.getElementById('f-clinician').value;
+  const service = document.getElementById('f-service').value;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const dateStr = now.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+
+  document.getElementById('result-area').style.display = 'block';
+  document.getElementById('result-area').scrollIntoView({behavior:'smooth', block:'start'});
+
+  // Triage
+  document.getElementById('triage-result').innerHTML = `
+    <div class="triage-banner high">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="triage-level-badge">HIGH RISK</span>
+          <span style="font-size:12px;color:var(--text-muted);">Case Reference: DSK-0047</span>
+        </div>
+        <div class="triage-heading">Possible Missed Clinical Diagnosis — Duty of Candour May Apply</div>
+        <div class="triage-reason">Patient presents with a concern that a significant clinical finding (thyroid dysfunction) was not identified during consultation with ${clinician}. External blood tests obtained independently by the patient reportedly contradict the assessment given. This raises potential clinical negligence exposure and Duty of Candour obligations under CQC Regulation 20. Patient is on a £1,000/month membership — elevated expectation and complaint escalation risk. Recommend clinical records review before response is approved. Dr Khalique should be informed personally before any communication is sent.</div>
+      </div>
+    </div>
+  `;
+
+  // Ack email
+  document.getElementById('ack-email').innerHTML = `
+    <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px;">✉️ Acknowledgement Email — Sent to Patient</div>
+    <div class="email-preview">
+      <div class="email-header">
+        <span class="email-label">From</span><span class="email-value">office@drsophiakhalique.com (Dr Sophia Khalique & Associates)</span>
+        <span class="email-label">To</span><span class="email-value">a.petrov@email.com</span>
+        <span class="email-label">Subject</span><span class="email-subject-val">Your concern has been received — Reference DSK-0047</span>
+        <span class="email-label">Sent</span><span class="email-value">${dateStr} at ${timeStr}</span>
+      </div>
+      <div class="email-body">Dear Alexandra,
+
+Thank you for contacting Dr Sophia Khalique & Associates.
+
+We have received your concern and want you to know that it has been taken seriously and logged with our practice. Your reference number is DSK-0047 — please quote this in any future correspondence.
+
+We understand that raising a concern can feel difficult, and we appreciate you giving us the opportunity to respond. A member of our team will be in touch with you within 48 hours with a full response.
+
+If your concern is urgent or relates to your ongoing care, please contact us directly on 020 7935 4357.
+
+With kind regards,
+
+Practice Manager
+Dr Sophia Khalique & Associates
+101 Harley Street, London W1G 6AH
+office@drsophiakhalique.com</div>
+      <div class="email-timestamp">⚡ Delivered automatically in under 60 seconds of submission</div>
+    </div>
+  `;
+
+  // Draft
+  const draftText = `Dear Alexandra,
+
+Thank you for taking the time to raise your concern with us. We have reviewed case reference DSK-0047 and wish to respond as follows.
+
+We understand from your correspondence that you attended a consultation at this practice on 18th February 2026 regarding symptoms of fatigue and weight gain, and that following subsequent blood tests arranged independently, a thyroid abnormality has been identified. We take this concern very seriously.
+
+Firstly, we want to offer our sincere apologies that you have been left feeling that your concerns were not fully addressed during your consultation. We understand how unsettling it must be to receive information from another source that raises questions about the advice you were given here.
+
+We have asked Dr Khalique to review your consultation notes and the clinical reasoning applied at the time of your visit. We are committed to providing you with a full and transparent account of the care you received. We would also like to offer you an appointment at no charge to discuss your results, review your current clinical picture, and agree on the most appropriate next steps for your care.
+
+As a valued member of this practice, your health and wellbeing remain our absolute priority. We would welcome the opportunity to restore your confidence in us.
+
+Please contact our practice manager directly on 020 7935 4357 or at office@drsophiakhalique.com to arrange a convenient time.
+
+Yours sincerely,
+
+[Awaiting Practice Manager Review & Approval]
+Dr Sophia Khalique & Associates`;
+
+  document.getElementById('draft-response').innerHTML = `
+    <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px;">📝 AI Draft Response — Ready for Practice Manager Review</div>
+    <div class="draft-card">
+      <div class="draft-header">
+        <span class="draft-title">Draft Response Letter — DSK-0047</span>
+        <span class="draft-ai-tag">AI Draft</span>
+      </div>
+      <div class="draft-body" id="draft-text"></div>
+      <div style="padding:12px 20px;background:var(--red-bg);border-top:1px solid #E8B4B0;font-size:12px;color:var(--red);display:flex;gap:8px;align-items:flex-start;">
+        <span>⚠️</span>
+        <span><strong>High Risk — Senior Review Required.</strong> Do not send this response without Dr Khalique reviewing the consultation notes and approving the content. Duty of Candour obligations may require additional disclosures.</span>
+      </div>
+      <div class="draft-actions">
+        <button class="btn btn-primary" onclick="approveDraft()">✓ Approve & Send</button>
+        <button class="btn btn-secondary">✎ Edit Draft</button>
+        <button class="btn btn-danger">⚑ Escalate to Dr Khalique</button>
+      </div>
+    </div>
+  `;
+
+  typeText('draft-text', draftText, 8);
+}
+
+function typeText(id, text, speed) {
+  const el = document.getElementById(id);
+  el.classList.add('typing');
+  el.textContent = '';
+  let i = 0;
+  const interval = setInterval(() => {
+    el.textContent += text[i];
+    i++;
+    if (i >= text.length) {
+      clearInterval(interval);
+      el.classList.remove('typing');
+    }
+  }, speed);
+}
+
+function approveDraft() {
+  const actions = document.querySelector('.draft-actions');
+  actions.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 0;">
+      <span style="font-size:18px;">✅</span>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--green);">Response approved and sent to patient</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Case DSK-0047 marked as responded. Audit trail updated automatically.</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── CASE MODAL ──
+const caseData = {
+  case1: {
+    title: 'Case DSK-0047',
+    sub: 'Alexandra Petrov — HIGH RISK',
+    risk: 'high',
+    content: `
+      <div class="ack-banner">✅ <span>Acknowledgement sent to patient at <strong>09:14:05</strong> — within 2 seconds of submission</span></div>
+      <div class="tab-bar">
+        <div class="tab active" onclick="switchTab(this,'t1-complaint')">Complaint</div>
+        <div class="tab" onclick="switchTab(this,'t1-triage')">AI Triage</div>
+        <div class="tab" onclick="switchTab(this,'t1-draft')">Draft Response</div>
+      </div>
+      <div class="tab-content active" id="t1-complaint">
+        <div class="modal-section">
+          <div class="modal-section-label">Patient Details</div>
+          <div class="meta-grid">
+            <div class="meta-item"><div class="meta-label">Patient</div><div class="meta-value">Alexandra Petrov</div></div>
+            <div class="meta-item"><div class="meta-label">Membership</div><div class="meta-value">Monthly — £1,000/month</div></div>
+            <div class="meta-item"><div class="meta-label">Treating Clinician</div><div class="meta-value">Dr Sophia Khalique</div></div>
+            <div class="meta-item"><div class="meta-label">Consultation Date</div><div class="meta-value">18 February 2026</div></div>
+          </div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Concern Submitted</div>
+          <div class="complaint-quote">I am a registered patient on the monthly membership plan. During my consultation I raised concerns about fatigue and weight gain. I was told these were lifestyle issues and sent away with general advice. I have since had blood tests done privately elsewhere which have revealed my thyroid levels are significantly abnormal. I feel this was missed during my consultation and I am concerned about the impact on my health over the past several months.</div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Desired Outcome</div>
+          <div class="modal-section-content">Explanation & Apology, Clinical Review</div>
+        </div>
+      </div>
+      <div class="tab-content" id="t1-triage">
+        <div class="triage-banner high" style="margin-bottom:16px;">
+          <div><span class="triage-level-badge">HIGH RISK</span><div class="triage-reason" style="margin-top:8px;">Possible missed clinical diagnosis. External test results conflict with clinical advice given. Duty of Candour obligations may apply under CQC Regulation 20. Membership patient — elevated escalation risk. Legal exposure cannot be excluded.</div></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-label">Regulatory Flags</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="padding:10px 14px;background:var(--red-bg);border-radius:var(--radius);font-size:13px;color:var(--red);">⚠️ <strong>Duty of Candour</strong> — CQC Regulation 20 may require proactive disclosure if a clinical error is confirmed</div>
+            <div style="padding:10px 14px;background:var(--amber-bg);border-radius:var(--radius);font-size:13px;color:var(--amber);">⚠️ <strong>Clinical Negligence Risk</strong> — External diagnosis contradicts practice advice. Legal review recommended before response.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="t1-draft">
+        <div style="padding:14px 16px;background:var(--red-bg);border:1px solid #E8B4B0;border-radius:var(--radius);font-size:13px;color:var(--red);margin-bottom:16px;">⚠️ <strong>High Risk — Do not send without Dr Khalique's personal review and approval.</strong></div>
+        <div style="font-size:13.5px;line-height:1.85;color:var(--text);white-space:pre-wrap;">Dear Alexandra,
+
+Thank you for raising your concern with us regarding your consultation on 18th February 2026. We take all patient feedback very seriously.
+
+We understand that you have received external blood test results which suggest a thyroid abnormality, and that you feel this may not have been identified at your recent consultation with Dr Khalique. We sincerely apologise for the distress this situation has caused you.
+
+Dr Khalique has been asked to personally review your consultation notes and the clinical reasoning applied. We would welcome the opportunity to meet with you to discuss your results and agree on the most appropriate next steps. This appointment will be provided at no charge.
+
+Please contact our practice manager at office@drsophiakhalique.com or 020 7935 4357.
+
+[Awaiting Approval — Dr Khalique]</div>
+        <div class="draft-actions" style="margin-top:16px;background:var(--cream);padding:12px 0 0;border-top:1px solid var(--cream-dark);">
+          <button class="btn btn-primary" onclick="alert('In the live system this sends the approved response directly from office@drsophiakhalique.com')">✓ Approve & Send</button>
+          <button class="btn btn-secondary">✎ Edit Draft</button>
+          <button class="btn btn-danger">⚑ Escalate</button>
+        </div>
+      </div>
+    `
+  },
+  case2: {
+    title: 'Case DSK-0046',
+    sub: 'James Whitmore — MEDIUM RISK',
+    risk: 'medium',
+    content: `
+      <div class="ack-banner">✅ <span>Acknowledgement sent at <strong>16:42:13</strong> — within 2 seconds of submission</span></div>
+      <div class="modal-section">
+        <div class="modal-section-label">Complaint Summary</div>
+        <div class="complaint-quote">I was charged the full monthly membership fee of £1,000 for February despite notifying the practice on 3rd February that I would be travelling for the entire month. I was told by reception that I could suspend my membership but this was never actioned. I am requesting a full refund for the month.</div>
+      </div>
+      <div class="triage-banner medium">
+        <div><span class="triage-level-badge">MEDIUM RISK</span><div class="triage-reason" style="margin-top:8px;">Billing dispute with a long-standing membership patient. No clinical risk. Reputational and retention risk if not resolved promptly. Refund may be appropriate if suspension request was confirmed verbally but not actioned.</div></div>
+      </div>
+    `
+  },
+  case3: {
+    title: 'Case DSK-0045',
+    sub: 'Nadia Al-Rashid — LOW RISK',
+    risk: 'low',
+    content: `
+      <div class="ack-banner">✅ <span>Acknowledgement sent within 60 seconds</span></div>
+      <div class="modal-section">
+        <div class="modal-section-label">Complaint Summary</div>
+        <div class="complaint-quote">My appointment with Dr Khalique was cancelled on the morning of the appointment with less than two hours notice. I had rearranged my schedule to attend and was not offered a suitable alternative time. This has happened once before and I find it unacceptable.</div>
+      </div>
+      <div class="triage-banner low">
+        <div><span class="triage-level-badge">LOW RISK</span><div class="triage-reason" style="margin-top:8px;">Service quality complaint. No clinical risk. Patient has noted a pattern — this is the second occurrence. Apology and priority rebooking appropriate. Flag for practice manager to review scheduling procedures.</div></div>
+      </div>
+    `
+  }
+};
+
+function openCase(id) {
+  const c = caseData[id];
+  if (!c) return;
+  document.getElementById('modal-title').textContent = c.title;
+  document.getElementById('modal-sub').textContent = c.sub;
+  document.getElementById('modal-body').innerHTML = c.content;
+  document.getElementById('case-modal').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('case-modal')) {
+    document.getElementById('case-modal').classList.remove('show');
+  }
+}
+
+function switchTab(btn, contentId) {
+  btn.closest('.modal-body').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  btn.closest('.modal-body').querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(contentId).classList.add('active');
+}
+</script>
+</body>
+</html>
